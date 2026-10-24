@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('Главная')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container">
+    <h2>Добро пожаловать, <span sec:authentication="name"></span>!</h2>
+    <p class="text-muted">Система учета автомобилей на парковке</p>
+
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm p-3 text-center">
+                <div class="text-muted">Автомобилей на парковке</div>
+                <div class="stat-number" th:text="${autoCount}">0</div>
+                <a th:href="@{/automobiles}" class="btn btn-primary btn-sm">Открыть список</a>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm p-3 text-center">
+                <div class="text-muted">Моделей в справочнике</div>
+                <div class="stat-number" th:text="${modelCount}">0</div>
+                <a th:href="@{/models}" class="btn btn-primary btn-sm">Открыть список</a>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm p-3 text-center">
+                <div class="text-muted">Калькулятор</div>
+                <div class="stat-number">₽</div>
+                <a th:href="@{/calc}" class="btn btn-primary btn-sm">Рассчитать стоимость</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-warning mt-3" sec:authorize="hasRole('READ_ONLY')">
+        У вас роль READ_ONLY - доступен только просмотр. Для редактирования нужна роль USER.
+    </div>
+    <div class="alert alert-info mt-3" sec:authorize="hasRole('USER')">
+        У вас роль USER - вы видите и редактируете только свои записи.
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>

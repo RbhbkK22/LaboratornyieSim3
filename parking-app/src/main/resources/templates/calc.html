@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Расчет')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container" style="max-width: 800px">
+    <h3>Расчет стоимости</h3>
+    <p class="text-muted">
+        Стоимость стоянки = количество дней × тариф. При стоянке от 30 дней скидка 15%.<br>
+        Текущая стоимость автомобиля считается от цены модели с учетом износа 10% в год (но не меньше 20% цены).
+    </p>
+
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+    <div class="card shadow-sm p-4 mb-4">
+        <form th:action="@{/calc}" method="post">
+            <div class="row">
+                <div class="col-md-7 mb-3">
+                    <label class="form-label">Автомобиль</label>
+                    <select name="autoId" class="form-select" required>
+                        <option th:each="a : ${automobiles}" th:value="${a.id}"
+                                th:text="${a.plateNumber + ' - ' + (a.model != null ? a.model.fullName : '')}"
+                                th:selected="${autoId != null && autoId == a.id}"></option>
+                    </select>
+                </div>
+                <div class="col-md-5 mb-3">
+                    <label class="form-label">Тариф, ₽ в сутки</label>
+                    <input type="number" step="0.01" name="tariff" class="form-control" th:value="${tariff}">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Рассчитать</button>
+        </form>
+    </div>
+
+    <div class="card shadow-sm p-4" th:if="${auto != null}">
+        <h5>Результат для <span th:text="${auto.plateNumber}"></span></h5>
+        <table class="table mb-0">
+            <tr>
+                <td>Дата заезда</td>
+                <td th:text="${#temporals.format(auto.arrivalDate, 'dd.MM.yyyy')}"></td>
+            </tr>
+            <tr>
+                <td>Дней на парковке</td>
+                <td th:text="${days}"></td>
+            </tr>
+            <tr>
+                <td>Скидка 15%</td>
+                <td th:text="${discount} ? 'да' : 'нет'"></td>
+            </tr>
+            <tr class="table-success">
+                <td><b>Стоимость стоянки</b></td>
+                <td><b th:text="${#numbers.formatDecimal(parkingCost, 1, 'WHITESPACE', 2, 'POINT')} + ' ₽'"></b></td>
+            </tr>
+            <tr>
+                <td>Цена модели (новой)</td>
+                <td th:text="${auto.model != null} ? ${#numbers.formatDecimal(auto.model.price, 1, 'WHITESPACE', 0, 'POINT')} + ' ₽' : '-'"></td>
+            </tr>
+            <tr class="table-info">
+                <td><b>Примерная текущая стоимость авто</b></td>
+                <td><b th:text="${#numbers.formatDecimal(carValue, 1, 'WHITESPACE', 0, 'POINT')} + ' ₽'"></b></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>

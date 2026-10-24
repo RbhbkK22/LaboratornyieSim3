@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Доступ запрещен')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container">
+    <div class="alert alert-danger">
+        <h4>Доступ запрещен</h4>
+        <p class="mb-0">У вашей роли недостаточно прав для этого действия.</p>
+    </div>
+    <a th:href="@{/}" class="btn btn-secondary">На главную</a>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>
