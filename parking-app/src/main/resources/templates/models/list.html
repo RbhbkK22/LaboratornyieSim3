@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('Модели')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Модели автомобилей</h3>
+        <a th:href="@{/models/new}" class="btn btn-success" sec:authorize="hasAnyRole('USER','ADMIN')">
+            + Добавить
+        </a>
+    </div>
+
+    <div th:replace="~{fragments/header :: messages}"></div>
+
+    <div class="card shadow-sm">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Марка</th>
+                <th>Модель</th>
+                <th>Год выпуска</th>
+                <th>Стоимость, ₽</th>
+                <th sec:authorize="hasRole('ADMIN')">Создал</th>
+                <th sec:authorize="hasAnyRole('USER','ADMIN')"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${models}">
+                <td th:text="${m.id}"></td>
+                <td th:text="${m.brand}"></td>
+                <td th:text="${m.modelName}"></td>
+                <td th:text="${m.releaseYear}"></td>
+                <td th:text="${#numbers.formatDecimal(m.price, 1, 'WHITESPACE', 0, 'POINT')}"></td>
+                <td sec:authorize="hasRole('ADMIN')" th:text="${m.createdBy}"></td>
+                <td class="text-end" sec:authorize="hasAnyRole('USER','ADMIN')">
+                    <a th:href="@{/models/edit/{id}(id=${m.id})}" class="btn btn-sm btn-outline-primary">Изменить</a>
+                    <form th:action="@{/models/delete/{id}(id=${m.id})}" method="post" class="d-inline"
+                          onsubmit="return confirm('Удалить модель?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(models)}">
+                <td colspan="7" class="text-center text-muted">Записей нет</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>

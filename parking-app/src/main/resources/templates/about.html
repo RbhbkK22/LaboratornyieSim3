@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('О приложении')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container">
+    <div class="card shadow-sm p-4">
+        <h3>О приложении</h3>
+        <p>
+            Веб-приложение «Парковка» предназначено для учета автомобилей, находящихся на парковке,
+            и справочника моделей автомобилей с их стоимостью. Можно добавлять, изменять и удалять записи,
+            а также рассчитать стоимость стоянки и примерную текущую стоимость автомобиля.
+        </p>
+
+        <h5>Роли пользователей</h5>
+        <ul>
+            <li><b>READ_ONLY</b> - только просмотр (назначается при регистрации);</li>
+            <li><b>USER</b> - видит и редактирует только записи, которые создал сам;</li>
+            <li><b>ADMIN</b> - полный доступ ко всем данным и назначение ролей.</li>
+        </ul>
+
+        <h5>Технологии</h5>
+        <p>Java 17, Spring Boot 3, Spring MVC, Spring Security, Spring Data JPA (Hibernate), H2, Thymeleaf,
+            Bootstrap 5, Lombok, Spring Boot Actuator.</p>
+
+        <h5>Разработчик</h5>
+        <p>
+            Студент группы РИЗ-250213у Помазов К. Д.<br>
+            Преподаватель: Архипов Н. А.<br>
+            УрФУ, ИРИТ-РТФ, 2026 г.
+        </p>
+
+        <a th:href="@{/}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>

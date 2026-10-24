@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('Автомобили')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Автомобили на парковке</h3>
+        <a th:href="@{/automobiles/new}" class="btn btn-success" sec:authorize="hasAnyRole('USER','ADMIN')">
+            + Добавить
+        </a>
+    </div>
+
+    <div th:replace="~{fragments/header :: messages}"></div>
+
+    <div class="card shadow-sm">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Госномер</th>
+                <th>Владелец</th>
+                <th>Модель</th>
+                <th>Цвет</th>
+                <th>Место</th>
+                <th>Дата заезда</th>
+                <th sec:authorize="hasRole('ADMIN')">Создал</th>
+                <th sec:authorize="hasAnyRole('USER','ADMIN')"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${automobiles}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${a.plateNumber}"></td>
+                <td th:text="${a.ownerName}"></td>
+                <td th:text="${a.model != null ? a.model.fullName : '-'}"></td>
+                <td th:text="${a.color}"></td>
+                <td th:text="${a.parkingPlace}"></td>
+                <td th:text="${#temporals.format(a.arrivalDate, 'dd.MM.yyyy')}"></td>
+                <td sec:authorize="hasRole('ADMIN')" th:text="${a.createdBy}"></td>
+                <td class="text-end" sec:authorize="hasAnyRole('USER','ADMIN')">
+                    <a th:href="@{/automobiles/edit/{id}(id=${a.id})}" class="btn btn-sm btn-outline-primary">Изменить</a>
+                    <form th:action="@{/automobiles/delete/{id}(id=${a.id})}" method="post" class="d-inline"
+                          onsubmit="return confirm('Удалить автомобиль?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(automobiles)}">
+                <td colspan="9" class="text-center text-muted">Записей нет</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>

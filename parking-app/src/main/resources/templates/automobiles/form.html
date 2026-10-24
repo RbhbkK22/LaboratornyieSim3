@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Автомобиль')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container" style="max-width: 700px">
+    <h3 th:text="${automobile.id == null} ? 'Новый автомобиль' : 'Редактирование автомобиля'"></h3>
+
+    <div class="card shadow-sm p-4">
+        <form th:action="@{/automobiles/save}" th:object="${automobile}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="mb-3">
+                <label class="form-label">Госномер</label>
+                <input type="text" th:field="*{plateNumber}" class="form-control" placeholder="А123ВС66">
+                <div class="text-danger small" th:if="${#fields.hasErrors('plateNumber')}" th:errors="*{plateNumber}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Владелец</label>
+                <input type="text" th:field="*{ownerName}" class="form-control">
+                <div class="text-danger small" th:if="${#fields.hasErrors('ownerName')}" th:errors="*{ownerName}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Модель</label>
+                <select name="modelId" class="form-select">
+                    <option value="">-- выберите модель --</option>
+                    <option th:each="m : ${models}" th:value="${m.id}" th:text="${m.fullName}"
+                            th:selected="${automobile.model != null && automobile.model.id == m.id}"></option>
+                </select>
+                <div class="text-danger small" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Цвет</label>
+                    <input type="text" th:field="*{color}" class="form-control">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Место</label>
+                    <input type="number" th:field="*{parkingPlace}" class="form-control" min="1">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('parkingPlace')}" th:errors="*{parkingPlace}"></div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Дата заезда</label>
+                    <input type="date" th:field="*{arrivalDate}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('arrivalDate')}" th:errors="*{arrivalDate}"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a th:href="@{/automobiles}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/header :: scripts}"></th:block>
+</body>
+</html>

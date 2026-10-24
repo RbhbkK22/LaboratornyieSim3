@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | Парковка'">Парковка</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">🚗 Парковка</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/automobiles}">Автомобили</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/models}">Модели</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/calc}">Расчет</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/admin/users}">Роли</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/about}">О приложении</a></li>
+            </ul>
+            <span class="navbar-text me-3" sec:authorize="isAuthenticated()">
+                <span sec:authentication="name"></span>
+                (<span sec:authentication="principal.authorities"></span>)
+            </span>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="btn btn-outline-light btn-sm" type="submit">Выйти</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div th:fragment="messages">
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</th:block>
+
+</body>
+</html>
